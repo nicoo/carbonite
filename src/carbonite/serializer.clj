@@ -9,7 +9,7 @@
            [java.net URI]
            [java.util Date UUID]
            [java.sql Time Timestamp]
-           [clojure.lang BigInt Keyword Symbol PersistentArrayMap
+           [clojure.lang Keyword Symbol PersistentArrayMap
             PersistentHashMap MapEntry PersistentStructMap 
             PersistentVector PersistentHashSet
             Cons PersistentList PersistentList$EmptyList
@@ -26,9 +26,9 @@
   (read-string (StringSerializer/get buffer)))
 
 (def clojure-reader-serializer
-  "Define a serializer that utilizes the Clojure pr-str and read-string functions
-   to serialize/deserialize instances relying solely on the printer/reader.  Probably
-   not the most efficient but likely to work in many cases."
+  ;Define a serializer that utilizes the Clojure pr-str and read-string functions
+  ; to serialize/deserialize instances relying solely on the printer/reader.  Probably
+  ; not the most efficient but likely to work in many cases.
   (proxy [Serializer] []  
     (writeObjectData [buffer obj] (clj-print buffer obj))
     (readObjectData [buffer type] (clj-read buffer))))
@@ -96,7 +96,7 @@
     (readObjectData [buffer type] (seq (StringSerializer/get buffer)))))
 
 (def uri-serializer
-  "Define a Kryo Serializer for java.net.URI."
+  ;Define a Kryo Serializer for java.net.URI.
   (proxy [Serializer] []
     (writeObjectData [buffer ^URI uri]
       (StringSerializer/put buffer (.toString uri)))
@@ -104,7 +104,7 @@
       (URI/create (StringSerializer/get buffer)))))
 
 (def uuid-serializer
-  "Define a Kryo Serializer for java.net.UUID."
+  ;Define a Kryo Serializer for java.net.UUID.
   (proxy [Serializer] []
     (writeObjectData [buffer ^UUID uuid]
       (LongSerializer/put buffer (.getMostSignificantBits uuid) false)
@@ -114,7 +114,7 @@
              (LongSerializer/get buffer false)))))
 
 (def timestamp-serializer
-  "Define a Kryo Serializer for java.sql.Timestamp"
+  ;Define a Kryo Serializer for java.sql.Timestamp
   (proxy [Serializer] []
     (writeObjectData [buffer ^Timestamp ts]
       (LongSerializer/put buffer (.getTime ts) true)
@@ -134,9 +134,8 @@
         (.newInstance constructor (object-array [ (LongSerializer/get buffer true)]))))))
 
 (def clojure-primitives
-  "Define a map of Clojure primitives and their serializers to install."
+  ;Define a map of Clojure primitives and their serializers to install.
   (array-map
-   BigInt clojure-reader-serializer
    Keyword clojure-reader-serializer
    Symbol clojure-reader-serializer))
 
